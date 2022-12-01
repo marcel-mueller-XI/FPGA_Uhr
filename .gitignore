@@ -22,6 +22,8 @@
 # or you create an own submodule in the folder to keep binary files out of your
 # design.
 
+# source: https://github.com/thomasrussellmurphy/quartus-DE0-project/blob/master/.gitignore
+
 # Need to keep all HDL files
 # *.vhd
 # *.v
