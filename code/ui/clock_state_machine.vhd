@@ -7,8 +7,6 @@ port (
 	SIGNAL Next_State_Mode_Button		: IN std_logic;	--! Button to step trough the states
 	SIGNAL clk								: IN std_logic;	--! Clock Signal
 	SIGNAL Reset_to_initial_state 	: IN std_logic;	--! Reset Button/Switch to set the State to initial_state
-	SIGNAL Inc_Activ						: IN integer;		--! Checking Signal if the Incremental is used or idle
-	
 
 	
 	--! gives out an 1 or 0 Signal for the mode that is active 
@@ -18,10 +16,12 @@ port (
 				Alarm_Setting_Std, 						--! Alarm_Setting_Std,
 				Alarm_Setting_Min	: OUT std_logic; 	--! Alarm_Setting_Min
 	
-	SIGNAL	Set_Alarm,									--! Set_Alarm if '1' -> set Alarm, if '0' -> set Time
+	SIGNAL	Set_Time,									--! Set_Time if '1' -> set Time, if '0' -> set Alarm
 				Time_Display, 								--! Time gets displayed (for internal logic) if '1'
-				Set_Std				: OUT std_logic   --! If (set_Std) '1' -> Set Std, false -> Set Min 
+				Set_Std				: OUT std_logic;  --! If (set_Std) '1' -> Set Std, false -> Set Min 
 	
+	
+	SIGNAL 	Q_min_units			: IN std_logic_vector(3 downto 0)
 );
 end clock_state_machine;
 ---------------------------------------------------------------------------------------------------------
@@ -33,13 +33,13 @@ ARCHITECTURE behave of clock_state_machine IS
 										Alarm_Setting_Std_int,
 										Alarm_Setting_Min_int);
 	
-	SIGNAL Set_Alarm_int, Time_Display_int, Set_Std_int : std_logic;	--! Time gets displayed (for internal logic)
+	SIGNAL Set_Time_int, Time_Display_int, Set_Std_int : std_logic;	--! Time gets displayed (for internal logic)
 	
 	SIGNAL	current_state, next_state	:	STATE_MODE_TYPE;
 	
 	CONSTANT initial_state : STATE_MODE_TYPE := Display_Min_Sec_int; --! to be able to change the initial_state to a different one
 	
-	SIGNAL Clk_sec_int : std_logic := '0';	--! Impulssignal für interne Verwendung
+	SIGNAL Clk_sec_int : std_logic := '0';	--! Impulssignal fÃ¼r interne Verwendung
 
 	SIGNAL	D_Min_Sec_int, D_Std_Min_int,	--! Display_Min_Sec_int, Dispaly_Std_Min_int
 				T_Setting_Std_int,				--! Time_Setting_Std_Ones_int, Time_Setting_Std_Tens_int
@@ -51,7 +51,9 @@ ARCHITECTURE behave of clock_state_machine IS
 																
 	CONSTANT	temp_wait_time 					: integer := 30_000_000;	--! how many times it runs torugh the falling clock
 		
-	SIGNAL	temp_button_pressed  :	std_logic; --! to use the button to step trough
+	SIGNAL	temp_button_pressed  :	integer := 0; --! to use the button to step trough
+	
+	SIGNAL 	Q_min_units_int		:	std_logic_vector(3 downto 0);
 ---------------------------------------------------------------------------------------------------------										
 BEGIN
 	-- Clk_sec_int <= Clk_sec;				-- Sekundentakt-Schnittstelle von anderen
@@ -65,26 +67,42 @@ BEGIN
 	Alarm_Setting_Std <= A_Setting_Std_int;			
 	Alarm_Setting_Min <= A_Setting_Min_int;
 
-	Set_Alarm <= Set_Alarm_int;
+	Set_Time <= Set_Time_int;
 	Time_Display <= Time_Display_int;
 	Set_Std <= Set_Std_int;
+	
+
 ---------------------------------------------------------------------------------------------------------
-state_register : PROCESS (clk, Reset_to_initial_state, Inc_Activ, Next_State_Mode_Button) --! Process used to step trough the current state
+state_register : PROCESS (clk, Reset_to_initial_state, Next_State_Mode_Button, Q_min_units) --! Process used to step trough the current state
 BEGIN
 	
 	--! Event handler for next State with reset and button pressed
 	IF (Reset_to_initial_state = '1') THEN 
 		current_state <= initial_state;	
 	ELSIF (rising_edge(clk)) THEN 
-		IF (Next_State_Mode_Button = '1' AND temp_button_pressed = '0') THEN
-			temp_button_pressed <= '1';
+		IF (Next_State_Mode_Button = '1' AND temp_button_pressed = 0) THEN
+			temp_button_pressed <= 1;
 			temp_reset <= 1;
-		ELSIF (Next_State_Mode_Button = '0' AND temp_button_pressed = '1') THEN
+		ELSIF (Next_State_Mode_Button = '0' AND temp_button_pressed = 1) THEN
+			CASE current_state IS
+			WHEN Display_Min_Sec_int =>  
+				next_state <= Dispaly_Std_Min_int;
+			WHEN Dispaly_Std_Min_int =>
+				next_state <= Time_Setting_Std_int;
+			WHEN Time_Setting_Std_int =>
+				next_state <= Time_Setting_Min_int;
+			WHEN Time_Setting_Min_int =>
+				next_state <= Alarm_Setting_Std_int;
+			WHEN Alarm_Setting_Std_int =>
+				next_state <= Alarm_Setting_Min_int;
+			WHEN Alarm_Setting_Min_int =>
+				next_state <= Display_Min_Sec_int;
+			END CASE;	
 			current_state <= next_state;
-			temp_button_pressed <= '0';
+			temp_button_pressed <= 0;
 			temp_reset <= 1;	
 		END IF;
-		IF (temp_reset = 1 OR Inc_Activ = 1) THEN 	--! Event handler for idle time => current_state -> initial_state
+		IF (temp_reset = 1 OR Q_min_units_int /= Q_min_units) THEN 	--! Event handler for idle time => current_state -> initial_state
 			temp_counter <= 0;
 		ELSIF (temp_counter < temp_wait_time) THEN
 			temp_counter <= temp_counter + 1;
@@ -93,7 +111,8 @@ BEGIN
 		END IF;
 	
 	END IF;
-	
+	temp_reset <= 0;
+	Q_min_units_int <= Q_min_units;
 END PROCESS;
 ---------------------------------------------------------------------------------------------------------
 next_state_output_logic : PROCESS (current_state)
@@ -131,10 +150,10 @@ END CASE;
 
 
 --! Sets the Alarm to true if it is selected to change the Alarm time 
-IF (A_Setting_Std_int = '1' OR A_Setting_Min_int = '1') THEN
-	Set_Alarm_int <= '1';
+IF (T_Setting_Std_int = '1' OR T_Setting_Min_int = '1') THEN
+	Set_Time_int <= '1';
 ELSE 
-	Set_Alarm_int <= '0';
+	Set_Time_int <= '0';
 END IF;
 
 --! If Time_Display_int is true, then the Time is shown on the 7 Segment 

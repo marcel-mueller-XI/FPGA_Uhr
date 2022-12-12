@@ -11,22 +11,23 @@ USE ieee.std_logic_1164.all;
 
 ENTITY Alarm IS
 	PORT(
-		Uhr_h_10er		: 	IN		std_logic_vector (3 DOWNTO 0);
-		Uhr_h_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
-		Uhr_m_10er		: 	IN		std_logic_vector (3 DOWNTO 0);
-		Uhr_m_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
-		Alarm_h_10er	: 	IN		std_logic_vector (3 DOWNTO 0);
-		Alarm_h_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
-		Alarm_m_10er	: 	IN		std_logic_vector (3 DOWNTO 0);
-		Alarm_m_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Uhr_h_10er		: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Uhr_h_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Uhr_m_10er		: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Uhr_m_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Alarm_h_10er	: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Alarm_h_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Alarm_m_10er	: 	IN		std_logic_vector (3 DOWNTO 0);
+		--Alarm_m_1er		: 	IN		std_logic_vector (3 DOWNTO 0);
 		Clk				: 	IN		std_logic; -- 50 MHz
-		--reset				:  IN    std_logic;
 		Aktiv				:	IN		std_logic; -- 
+		Reset          :  IN 	std_logic;
 		
 		Alarm_out		: 	OUT   std_logic;
-		Sound				:	OUT	std_logic;
+		Sound				:	OUT	std_logic
+		
 		-- test
-		Timer          : OUT    integer
+		--Timer          : OUT    integer
 		--test
   );
 END Alarm;
@@ -42,9 +43,7 @@ ARCHITECTURE behave OF Alarm IS
 	SIGNAL
 	next_state : STATE_TYPE;
 	-- kombinatorisch gebildet --> nextstate_proc
-	SIGNAL
-	last_state : STATE_TYPE;
-	-- Für Eintrittbedingung
+
 
 	signal 	Alarm_int 	: 	std_logic;
 	signal 	Alarm_mem 	: 	std_logic;
@@ -64,7 +63,6 @@ ARCHITECTURE behave OF Alarm IS
 	signal   t           :  integer; --timer for sates
 	signal	reset_int  :  std_logic;
 	
-	
 	constant eighth_note : integer := 6250000; --timer for eighth note;
 	constant quater_note : integer := 12500000; --timer for quater note;
 	constant dotted_quater_note : integer := 18750000; --timer for quater note;
@@ -73,16 +71,28 @@ ARCHITECTURE behave OF Alarm IS
 
 BEGIN
 	Alarm_out 	<= Alarm_mem;
-	
-	Alarm_int 	<= '1' WHEN ((Aktiv = '1') AND (Uhr_h_10er = Alarm_h_10er) AND (Uhr_h_1er = Alarm_h_1er) AND (Uhr_m_10er = Alarm_m_10er) AND (Uhr_m_1er = Alarm_m_1er))ELSE
-						'0';
-	Alarm_mem	<= Alarm_int WHEN (Aktiv = '1') ELSE
-						'0';					
-	Timer <= t;
+	-- Alarm_int 	<= '1' WHEN ((Aktiv = '1') AND (Uhr_h_10er = Alarm_h_10er) AND (Uhr_h_1er = Alarm_h_1er) AND (Uhr_m_10er = Alarm_m_10er) AND (Uhr_m_1er = Alarm_m_1er))ELSE
+	--					'0';
+	-- Alarm_mem	<= '1' WHEN (Aktiv = '1') ELSE
+	-- 					'0';	
+	-- test:
+	--Timer <= t;
 	
 	reset_int   <= '0' WHEN (Alarm_mem = '1') ELSE  -- reset Timer
 						'1';
-
+						
+	-- Aktiv Proc 
+	aktiv_proc : PROCESS(Aktiv, Reset)
+	BEGIN
+		IF (Reset = '1') THEN
+			-- Startzustand nach einem Reset
+			Alarm_mem <= '0';
+		ELSIF rising_edge(Aktiv) THEN
+			-- Ãbernahme des neuen inneren Zustandes
+			Alarm_mem <= '1';
+		END IF;
+	END PROCESS aktiv_proc;
+	
 	-- States 
 	clocked_proc : PROCESS( Clk, Reset_int)
 	BEGIN
@@ -110,7 +120,7 @@ BEGIN
 	END PROCESS timer_proc;
 	
    --Next states
-	nextstate_proc : PROCESS( current_state, last_state, t )
+	nextstate_proc : PROCESS( current_state, t )
 	BEGIN
 		next_state <= current_state;
 		CASE current_state IS
@@ -118,7 +128,7 @@ BEGIN
 				IF ( t >= quater_note ) THEN
 					next_state <= s_break_1;
 				END IF;
-				
+	
 			WHEN s_a2 =>
 				IF ( t >= quater_note ) THEN
 					next_state <= s_break_2;
@@ -221,8 +231,8 @@ BEGIN
 		END CASE;
 	END PROCESS nextstate_proc;
 	
-	-- Melody
-	output_proc : PROCESS( current_state, last_state, clk_a, clk_c, clk_f, clk_g, alarm_mem)
+	-- Melody Jingle Bells
+	output_proc : PROCESS( current_state, clk_a, clk_c, clk_f, clk_g, alarm_mem)
 	BEGIN
 	-- Default Assignment, wichtig! D-Latch Problematik
 		Sound <= '0';
@@ -320,7 +330,8 @@ BEGIN
 				=>NULL;
 		END CASE;
 	END PROCESS output_proc;
-			
+	
+	-- tone f
 	proc_tone_f: process(Clk)
 	begin
 		if (rising_edge(Clk)) then
@@ -336,6 +347,7 @@ BEGIN
 		end if;	
 	end process proc_tone_f;
 	
+	-- tone g
 	proc_tone_g: process(Clk)
 	begin
 		if (rising_edge(Clk)) then
@@ -351,6 +363,7 @@ BEGIN
 		end if;	
 	end process proc_tone_g;
 	
+	-- tone a
 	proc_tone_a: process(Clk)
 	begin
 		if (rising_edge(Clk)) then
@@ -366,6 +379,7 @@ BEGIN
 		end if;
 	end process proc_tone_a;
 	
+	-- tone c
 	proc_tone_c: process(Clk)
 	begin
 		if (rising_edge(Clk)) then

@@ -73,12 +73,12 @@ begin
 	
 	-- Kombinatorischer Prozess zur Generierung des nächsten inneren Zustands -> siehe VhdlAutomaten, EDA-Wiki
 	-- + Kombinatorischer Prozess zur Generierung des Ausgangszustands bzw. dem neuen Zustand für Registered Signale
-	nextstate_proc : process(A2, B2, current_state)
+	nextstate_proc : process(A2, B2, current_state, En_Encoder)
 	begin
 		
 		En_int <= '0';						-- Default Assignments wegen D-Latch Problematik
 		Up_nDown_int <= '0';
-		
+		next_state <= s0;
 		if (En_Encoder = '1') then
 			case current_state is
 				when s0 =>

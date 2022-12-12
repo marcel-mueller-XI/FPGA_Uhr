@@ -69,7 +69,6 @@ set_global_assignment -name VHDL_FILE code/HEX7SEG.vhd
 set_global_assignment -name VHDL_FILE code/coreClock_alarm/InEncoder_Counter.vhd
 set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder_fpga.vhd
 set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder.vhd
-set_global_assignment -name VHDL_FILE code/alarm/Alarm_fpga.vhd
 set_global_assignment -name VHDL_FILE code/alarm/Alarm.vhd
 set_global_assignment -name VHDL_FILE code/topClock.vhd
 set_global_assignment -name VHDL_FILE code/ui/clock_state_machine.vhd
@@ -79,8 +78,6 @@ set_global_assignment -name VHDL_FILE code/coreClock_alarm/Counter.vhd
 set_global_assignment -name VHDL_FILE code/coreClock_alarm/clockwork.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterSec_tb.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterSec_tester.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterH_tester.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterH_tb.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tester.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tb.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tb.vhd
