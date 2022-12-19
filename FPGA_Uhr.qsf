@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone III"
 set_global_assignment -name DEVICE EP3C16F484C6
-set_global_assignment -name TOP_LEVEL_ENTITY clockwork
+set_global_assignment -name TOP_LEVEL_ENTITY topClock
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 13.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "15:38:42  NOVEMBER 29, 2022"
 set_global_assignment -name LAST_QUARTUS_VERSION 13.1
@@ -62,9 +62,6 @@ set_global_assignment -name EDA_TEST_BENCH_FILE code/coreClock_alarm/clockwork_t
 set_global_assignment -name EDA_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tb.vhd -section_id clockwork_tb
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name VHDL_FILE code/HEX7SEG.vhd
 set_global_assignment -name VHDL_FILE code/coreClock_alarm/InEncoder_Counter.vhd
 set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder_fpga.vhd
@@ -82,4 +79,57 @@ set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tb.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tb.vhd
 set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tester.vhd
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+
+set_location_assignment PIN_H2 -to Reset
+set_location_assignment PIN_G21 -to Clk_50
+set_location_assignment PIN_R11 -to A
+set_location_assignment PIN_T10 -to B
+set_location_assignment PIN_T9 -to Encoder_Button
+set_location_assignment PIN_J6 -to Encoder_Activ
+set_location_assignment PIN_H5 -to En_alarm_in
+set_location_assignment PIN_G3 -to Clear_Alarm
+
+set_location_assignment PIN_J1 -to LED_out
+set_location_assignment PIN_J2 -to Alarm_out
+set_location_assignment PIN_AB9 -to Sound
+
+set_location_assignment PIN_F13 -to SegQ_0[6]
+set_location_assignment PIN_F12 -to SegQ_0[5]
+set_location_assignment PIN_G12 -to SegQ_0[4]
+set_location_assignment PIN_H13 -to SegQ_0[3]
+set_location_assignment PIN_H12 -to SegQ_0[2]
+set_location_assignment PIN_F11 -to SegQ_0[1]
+set_location_assignment PIN_E11 -to SegQ_0[0]
+set_location_assignment PIN_A15 -to SegQ_1[6]
+set_location_assignment PIN_E14 -to SegQ_1[5]
+set_location_assignment PIN_B14 -to SegQ_1[4]
+set_location_assignment PIN_A14 -to SegQ_1[3]
+set_location_assignment PIN_C13 -to SegQ_1[2]
+set_location_assignment PIN_B13 -to SegQ_1[1]
+set_location_assignment PIN_A13 -to SegQ_1[0]
+
+set_location_assignment PIN_F14 -to SegQ_2[6]
+set_location_assignment PIN_B17 -to SegQ_2[5]
+set_location_assignment PIN_A17 -to SegQ_2[4]
+set_location_assignment PIN_E15 -to SegQ_2[3]
+set_location_assignment PIN_B16 -to SegQ_2[2]
+set_location_assignment PIN_A16 -to SegQ_2[1]
+set_location_assignment PIN_D15 -to SegQ_2[0]
+set_location_assignment PIN_G15 -to SegQ_3[6]
+set_location_assignment PIN_D19 -to SegQ_3[5]
+set_location_assignment PIN_C19 -to SegQ_3[4]
+set_location_assignment PIN_B19 -to SegQ_3[3]
+set_location_assignment PIN_A19 -to SegQ_3[2]
+set_location_assignment PIN_F15 -to SegQ_3[1]
+set_location_assignment PIN_B18 -to SegQ_3[0]
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to A
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to B
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Encoder_Button
+
+
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

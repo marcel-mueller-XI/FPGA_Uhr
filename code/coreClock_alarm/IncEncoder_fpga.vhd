@@ -14,13 +14,13 @@ entity IncEncoder_fpga is
 		
 		signal D_Clk_min_units 	: in std_logic_vector(3 downto 0);		-- Uhr Startwert Dateneingang
 		signal D_Clk_min_tens 	: in std_logic_vector(3 downto 0);
-		signal D_Clk_hour_units 	: in std_logic_vector(3 downto 0);
+		signal D_Clk_hour_units : in std_logic_vector(3 downto 0);
 		signal D_Clk_hour_tens 	: in std_logic_vector(3 downto 0);
 		
-		signal Q_Clk_min_units 	: out std_logic_vector(3 downto 0);		-- Uhr Encoder Datenausgang
-		signal Q_Clk_min_tens 	: out std_logic_vector(3 downto 0);
-		signal Q_Clk_hour_units 	: out std_logic_vector(3 downto 0);
-		signal Q_Clk_hour_tens 	: out std_logic_vector(3 downto 0);
+		signal Q_Clk_min_units 	: buffer std_logic_vector(3 downto 0);		-- Uhr Encoder Datenausgang
+		signal Q_Clk_min_tens 	: buffer std_logic_vector(3 downto 0);
+		signal Q_Clk_hour_units : buffer std_logic_vector(3 downto 0);
+		signal Q_Clk_hour_tens 	: buffer std_logic_vector(3 downto 0);
 
 		
 		signal D_Alarm_min_units 	: in std_logic_vector(3 downto 0);	-- Alarm Startwert Dateneingang
@@ -28,10 +28,10 @@ entity IncEncoder_fpga is
 		signal D_Alarm_hour_units 	: in std_logic_vector(3 downto 0);
 		signal D_Alarm_hour_tens 	: in std_logic_vector(3 downto 0);
 		
-		signal Q_Alarm_min_units 	: out std_logic_vector(3 downto 0);	-- Alarm Encoder Datenausgang
-		signal Q_Alarm_min_tens 	: out std_logic_vector(3 downto 0);
-		signal Q_Alarm_hour_units 	: out std_logic_vector(3 downto 0);
-		signal Q_Alarm_hour_tens 	: out std_logic_vector(3 downto 0)
+		signal Q_Alarm_min_units 	: buffer std_logic_vector(3 downto 0);	-- Alarm Encoder Datenausgang
+		signal Q_Alarm_min_tens 	: buffer std_logic_vector(3 downto 0);
+		signal Q_Alarm_hour_units 	: buffer std_logic_vector(3 downto 0);
+		signal Q_Alarm_hour_tens 	: buffer std_logic_vector(3 downto 0)
 		
 	);
 end entity IncEncoder_fpga;
