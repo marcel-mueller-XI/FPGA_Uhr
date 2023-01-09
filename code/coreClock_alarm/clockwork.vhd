@@ -122,8 +122,8 @@ begin
 	--! Instanziierung des CounterSec
 	gen_seconds : entity work.CounterSec
 		generic map(
-			Max50			=> 2,
-			Max25			=> 1
+			Max50			=> Max50,
+			Max25			=> Max25
 		)
 		port map(
 			Reset			=> Reset,-----------------

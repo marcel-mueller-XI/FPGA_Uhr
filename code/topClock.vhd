@@ -25,7 +25,10 @@ port (			--Board an den Rand anschlieÃŸen
 	SegQ_0 	: out std_logic_vector(6 downto 0);
 	SegQ_1 	: out std_logic_vector(6 downto 0);
 	SegQ_2 	: out std_logic_vector(6 downto 0);
-	SegQ_3 	: out std_logic_vector(6 downto 0)
+	SegQ_3 	: out std_logic_vector(6 downto 0);
+	
+	-- Debug
+	trigger	: in std_logic
 );
 end entity topClock;
 
