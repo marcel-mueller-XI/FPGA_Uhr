@@ -5,7 +5,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity topClock is
-port (			--Board an den Rand anschlieÃŸen
+port (			--Board an den Rand anschlieÃƒÅ¸en
 	-- IN
 	Reset				: in std_logic;
 	Clk_50			: in std_logic;	-- 50 MHz Eingangssignal
@@ -50,7 +50,7 @@ architecture behave of topClock is
 	signal D_hour_units	: std_logic_vector(3 downto 0);	-- Data IN Stunden	Einer
 	signal D_hour_tens	: std_logic_vector(3 downto 0);	-- Data IN Stunden	Zehner
 	
-	signal En	 		: std_logic; 							-- Enable fÃƒÆ’Ã‚Â¼r Uhr-Start
+	signal En	 		: std_logic; 							-- Enable fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼r Uhr-Start
 	signal Clear 		: std_logic;							-- Clear
 	
 	signal Q_sec_units	: std_logic_vector(3 downto 0);	-- Data OUT Sekunden	Einer
@@ -124,21 +124,20 @@ coreClock : entity work.clockwork
 --	Max50 => 
 --)
 port map (
-	Reset			=> Reset_int,
 	Clk_50		=> Clk_50,
-	Clk_sec 		=> Clk_sec,
+	
+	Reset		=> Reset_int,
+	Clear 		=> Clear,
+	
+	Clk_sec 	=> Clk_sec,
 	square_wav 	=> square_wav,
 	
-	D_sec_units	=> D_sec_units,
-	D_sec_tens	=> D_sec_tens,
-	D_min_units	=> D_min_units,
-	D_min_tens	=> D_min_tens,
-	D_hour_units => D_hour_units,
-	D_hour_tens	=> D_hour_tens,
+	Show_nSet			=>	CONTROL_Time_Display,
+	Set_Clock_nAlarm 	=> CONTROL_Set_Time,
+	Set_Hour_nMin 		=> CONTROL_Set_Std,
 	
-	En 			=> CONTROL_Time_Display,	-- En damit Uhr lÃ¤uft, fÃ¼r 7hex nÃ¼tzlich
-	Clear 		=> Clear,
-	Load			=> CONTROL_Set_Time,					-- load Clock und Alarm an D EingÃ¤nge ----------------------------------------------------------------------------
+	En_alarm_in				=> En_alarm_in,				-- DataIn von Alarm stellen, einfacher Switch um Alarm zu aktivieren
+	En_alarm_out 			=> En_alarm_out,
 	
 	Q_sec_units	=> Q_sec_units,				-- Display
 	Q_sec_tens	=> Q_sec_tens,
@@ -147,51 +146,17 @@ port map (
 	Q_hour_units => Q_hour_units,
 	Q_hour_tens	=> Q_hour_tens,
 	
-	LED_out 	=> LED_out,	-- entspricht Rechtecksignal, abhÃ¤ngig von EingÃ¤ngen
+	Q_al_min_units		=> D_alarm_min_units,
+	Q_al_min_tens		=> D_alarm_min_tens,
+	Q_al_hour_units	=> D_alarm_hour_units,
+	Q_al_hour_tens		=> D_alarm_hour_tens,
 	
-	En_alarm_in				=> En_alarm_in,				-- DataIn von Alarm stellen, einfacher Switch um Alarm zu aktivieren
-	En_alarm_out 			=> En_alarm_out,
-	
-	D_alarm_sec_units		=> D_alarm_sec_units,
-	D_alarm_sec_tens		=> D_alarm_sec_tens,
-	D_alarm_min_units		=> D_alarm_min_units,
-	D_alarm_min_tens		=> D_alarm_min_tens,
-	D_alarm_hour_units	=> D_alarm_hour_units,
-	D_alarm_hour_tens		=> D_alarm_hour_tens
+	LED_out 	=> LED_out,	-- entspricht Rechtecksignal, abhÃ¤ngig von EingÃƒÂ¤ngen
+
+	A_enc	=> A,
+	B_enc	=> B
 );
 
--- Encoder
-encoder : entity work.IncEncoder_fpga
-port map(
-	A				=> A,	-- Eingangssignal A
-	B				=> B,	-- Eingangssignal B
-	Clk		 	=> Clk_50,	-- Clk Eingang
-	Reset	 		=> Reset_int,						-- Reset Encoder
-	Min_Hour 	=> CONTROL_Set_Std, 				-- MinutenzÃ¤hlung = 0 / StundenzÃ¤hlung = 1
-	En		 		=> CONTROL_NOT_Time_Display,	-- Enable Encoder
-	Clk_Alarm   => CONTROL_Set_Time,				-- bei 1 Clk aktiv, bei 0 Alarm aktiv
-	
-	D_Clk_min_units => Q_min_units,			-- Uhr Startwert Dateneingang -> Q Ausgang von clockworker
-	D_Clk_min_tens 	=> Q_min_tens,
-	D_Clk_hour_units => Q_hour_units,
-	D_Clk_hour_tens => Q_hour_tens,
-	
-	Q_Clk_min_units => D_min_units,			-- Uhr Encoder Datenausgang -> D Eingang clockworker
-	Q_Clk_min_tens 	=> D_min_tens,
-	Q_Clk_hour_units => D_hour_units,
-	Q_Clk_hour_tens => D_hour_tens,
-	
-	D_Alarm_min_units => Q_min_units,	-- Alarm Startwert Dateneingang
-	D_Alarm_min_tens 	=> Q_min_tens,
-	D_Alarm_hour_units => Q_hour_units,
-	D_Alarm_hour_tens  => Q_hour_tens,
-	
-	Q_Alarm_min_units => D_Alarm_min_units,	-- Alarm Encoder Datenausgang
-	Q_Alarm_min_tens  => D_Alarm_min_tens,
-	Q_Alarm_hour_units => D_Alarm_hour_units,
-	Q_Alarm_hour_tens  => D_Alarm_hour_tens
-);
-	
 
 -----------------------------------------------
 -- alarm:
