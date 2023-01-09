@@ -62,23 +62,6 @@ set_global_assignment -name EDA_TEST_BENCH_FILE code/coreClock_alarm/clockwork_t
 set_global_assignment -name EDA_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tb.vhd -section_id clockwork_tb
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name VHDL_FILE code/HEX7SEG.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/InEncoder_Counter.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder_fpga.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder.vhd
-set_global_assignment -name VHDL_FILE code/alarm/Alarm.vhd
-set_global_assignment -name VHDL_FILE code/topClock.vhd
-set_global_assignment -name VHDL_FILE code/ui/clock_state_machine.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/CounterSec.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/counterH.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/Counter.vhd
-set_global_assignment -name VHDL_FILE code/coreClock_alarm/clockwork.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterSec_tb.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterSec_tester.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tester.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tb.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tb.vhd
-set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tester.vhd
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
 
 set_location_assignment PIN_H2 -to Reset
@@ -150,8 +133,6 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ADVANCED_TRIGGER_
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_LEVEL_PIPELINE=1" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ENABLE_ADVANCED_TRIGGER=0" -section_id auto_signaltap_0
 set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp2.stp
-set_global_assignment -name CDF_FILE output_files/Chain3.cdf
-set_global_assignment -name SIGNALTAP_FILE output_files/stp2.stp
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_STORAGE_QUALIFIER_INVERSION_MASK_LENGTH=0" -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT acq_clk -to Clk_50 -section_id auto_signaltap_0
 set_location_assignment PIN_F1 -to trigger
@@ -206,5 +187,25 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT acq_data_
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_DATA_BITS=43" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_LOWORD=21281" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_HIWORD=18696" -section_id auto_signaltap_0
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder_alarm.vhd
+set_global_assignment -name VHDL_FILE code/HEX7SEG.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/InEncoder_Counter.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder_fpga.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/IncEncoder.vhd
+set_global_assignment -name VHDL_FILE code/alarm/Alarm.vhd
+set_global_assignment -name VHDL_FILE code/topClock.vhd
+set_global_assignment -name VHDL_FILE code/ui/clock_state_machine.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/CounterSec.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/counterH.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/Counter.vhd
+set_global_assignment -name VHDL_FILE code/coreClock_alarm/clockwork.vhd
+set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterSec_tb.vhd
+set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/CounterSec_tester.vhd
+set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tester.vhd
+set_global_assignment -name VHDL_TEST_BENCH_FILE code/coreClock_alarm/clockwork_tb.vhd
+set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tb.vhd
+set_global_assignment -name VHDL_TEST_BENCH_FILE code/alarm/Alarm_tester.vhd
+set_global_assignment -name CDF_FILE output_files/Chain3.cdf
+set_global_assignment -name SIGNALTAP_FILE output_files/stp2.stp
 set_global_assignment -name SLD_FILE db/stp2_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -61,7 +61,7 @@ begin
 	Load_Clk <= '1' when En = '1' and D_Clk_min_units /= Q_Clk_min_units and D_Clk_min_tens /= Q_Clk_min_tens and D_Clk_hour_units /= Q_Clk_hour_units and D_Clk_hour_tens /= Q_Clk_hour_tens else
 					'0';
  	
-	encoder : entity work.IncEncoder
+	encoder : entity work.IncEncoder_alarm
 	port map(
 		A 				=> A,
 		B 				=> B,
